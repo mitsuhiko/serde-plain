@@ -134,11 +134,11 @@ impl ser::Serializer for Serializer {
     }
 }
 
-/// Takes a serializable object and dumps out a plain string.
+/// Serialize the given data value as a plain string.
 ///
 /// This serializes an object with the `Serializer` into a string and then
-/// returns it.  This requires that the type is a simple one (integer, string or
-/// an enum that is serialized into a string)
+/// returns it.  This requires that the type is a simple one (integer, string,
+/// etc.).
 pub fn to_string<T: ser::Serialize>(value: &T) -> Result<String, Error> {
     value.serialize(Serializer)
 }
