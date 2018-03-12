@@ -36,10 +36,11 @@
 //! The inverse is also possible with `to_string`:
 //!
 //! ```rust
-//! assert_eq!(serde_plain::to_string(true).unwrap(), "true");
+//! assert_eq!(serde_plain::to_string(&true).unwrap(), "true");
 //! ```
 extern crate serde;
 
+mod macros;
 mod ser;
 mod de;
 mod error;
