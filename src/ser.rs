@@ -1,9 +1,9 @@
-use serde::ser::{Impossible, Serialize, Serializer};
+use serde::ser;
 
 use error::Error;
 
 /// A simple serializer that can dump out strings.
-pub struct PlainSerializer;
+pub struct Serializer;
 
 macro_rules! serialize_as_string {
     ($($ty:ty => $meth:ident,)*) => {
@@ -11,16 +11,16 @@ macro_rules! serialize_as_string {
     };
 }
 
-impl Serializer for PlainSerializer {
+impl ser::Serializer for Serializer {
     type Ok = String;
     type Error = Error;
-    type SerializeSeq = Impossible<String, Error>;
-    type SerializeTuple = Impossible<String, Error>;
-    type SerializeTupleStruct = Impossible<String, Error>;
-    type SerializeTupleVariant = Impossible<String, Error>;
-    type SerializeMap = Impossible<String, Error>;
-    type SerializeStruct = Impossible<String, Error>;
-    type SerializeStructVariant = Impossible<String, Error>;
+    type SerializeSeq = ser::Impossible<String, Error>;
+    type SerializeTuple = ser::Impossible<String, Error>;
+    type SerializeTupleStruct = ser::Impossible<String, Error>;
+    type SerializeTupleVariant = ser::Impossible<String, Error>;
+    type SerializeMap = ser::Impossible<String, Error>;
+    type SerializeStruct = ser::Impossible<String, Error>;
+    type SerializeStructVariant = ser::Impossible<String, Error>;
 
     serialize_as_string!{
         bool => serialize_bool,
@@ -59,7 +59,7 @@ impl Serializer for PlainSerializer {
         Ok(variant.to_string())
     }
 
-    fn serialize_newtype_struct<T: ?Sized + Serialize>(
+    fn serialize_newtype_struct<T: ?Sized + ser::Serialize>(
         self,
         _name: &'static str,
         value: &T,
@@ -67,7 +67,7 @@ impl Serializer for PlainSerializer {
         value.serialize(self)
     }
 
-    fn serialize_newtype_variant<T: ?Sized + Serialize>(
+    fn serialize_newtype_variant<T: ?Sized + ser::Serialize>(
         self,
         _name: &'static str,
         _variant_index: u32,
@@ -81,7 +81,7 @@ impl Serializer for PlainSerializer {
         Ok("".to_string())
     }
 
-    fn serialize_some<T: ?Sized + Serialize>(self, value: &T) -> Result<String, Error> {
+    fn serialize_some<T: ?Sized + ser::Serialize>(self, value: &T) -> Result<String, Error> {
         value.serialize(self)
     }
 
@@ -136,9 +136,9 @@ impl Serializer for PlainSerializer {
 
 /// Takes a serializable object and dumps out a plain string.
 ///
-/// This serializes an object with the `PlainSerializer` into a string and then
+/// This serializes an object with the `Serializer` into a string and then
 /// returns it.  This requires that the type is a simple one (integer, string or
 /// an enum that is serialized into a string)
-pub fn to_string<T: Serialize>(value: &T) -> Result<String, Error> {
-    value.serialize(PlainSerializer)
+pub fn to_string<T: ser::Serialize>(value: &T) -> Result<String, Error> {
+    value.serialize(Serializer)
 }
