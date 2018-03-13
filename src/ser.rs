@@ -39,7 +39,7 @@ impl ser::Serializer for Serializer {
     }
 
     fn serialize_bytes(self, _value: &[u8]) -> Result<String, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("bytes"))
     }
 
     fn serialize_unit(self) -> Result<String, Error> {
@@ -47,7 +47,7 @@ impl ser::Serializer for Serializer {
     }
 
     fn serialize_unit_struct(self, _name: &'static str) -> Result<String, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("unit struct"))
     }
 
     fn serialize_unit_variant(
@@ -74,7 +74,7 @@ impl ser::Serializer for Serializer {
         _variant: &'static str,
         _value: &T,
     ) -> Result<String, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("newtype variant"))
     }
 
     fn serialize_none(self) -> Result<String, Error> {
@@ -86,11 +86,11 @@ impl ser::Serializer for Serializer {
     }
 
     fn serialize_seq(self, _len: Option<usize>) -> Result<Self::SerializeSeq, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("seq"))
     }
 
     fn serialize_tuple(self, _len: usize) -> Result<Self::SerializeTuple, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("tuple"))
     }
 
     fn serialize_tuple_struct(
@@ -98,7 +98,7 @@ impl ser::Serializer for Serializer {
         _name: &'static str,
         _len: usize,
     ) -> Result<Self::SerializeTupleStruct, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("tuple struct"))
     }
 
     fn serialize_tuple_variant(
@@ -108,11 +108,11 @@ impl ser::Serializer for Serializer {
         _variant: &'static str,
         _len: usize,
     ) -> Result<Self::SerializeTupleVariant, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("tuple variant"))
     }
 
     fn serialize_map(self, _len: Option<usize>) -> Result<Self::SerializeMap, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("map"))
     }
 
     fn serialize_struct(
@@ -120,7 +120,7 @@ impl ser::Serializer for Serializer {
         _name: &'static str,
         _len: usize,
     ) -> Result<Self::SerializeStruct, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("struct"))
     }
 
     fn serialize_struct_variant(
@@ -130,7 +130,7 @@ impl ser::Serializer for Serializer {
         _variant: &'static str,
         _len: usize,
     ) -> Result<Self::SerializeStructVariant, Error> {
-        Err(Error::ImpossibleSerialization)
+        Err(Error::ImpossibleSerialization("struct variant"))
     }
 }
 

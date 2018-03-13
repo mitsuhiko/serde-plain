@@ -7,9 +7,11 @@ use std::error;
 #[derive(Debug, Clone)]
 pub enum Error {
     /// An impossible / unsupported operation was attempted.
-    ImpossibleSerialization,
+    ImpossibleSerialization(&'static str),
     /// A certain deserialization is impossible.
-    ImpossibleDeserialization,
+    ImpossibleDeserialization(&'static str),
+    /// Raised when parsing errors happen during deserialization.
+    Parse(&'static str, String),
     /// An arbitrary error message.
     Message(String),
 }
@@ -29,8 +31,9 @@ impl de::Error for Error {
 impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
-            Error::ImpossibleSerialization => "value cannot be serialized to a plain value",
-            Error::ImpossibleDeserialization => "value cannot be deserialized this way",
+            Error::ImpossibleSerialization(_) => "impossible serialization",
+            Error::ImpossibleDeserialization(_) => "impossible deserialization",
+            Error::Parse(_, ref msg) => msg.as_str(),
             Error::Message(ref msg) => msg.as_str(),
         }
     }
@@ -38,7 +41,15 @@ impl error::Error for Error {
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use std::error::Error;
-        write!(f, "plain serialization error: {}", self.description())
+        match *self {
+            Error::ImpossibleSerialization(ty) => {
+                write!(f, "cannot serialize non primitive type {}", ty)
+            }
+            Error::ImpossibleDeserialization(ty) => {
+                write!(f, "cannot deserialize to non primitive type {}", ty)
+            }
+            Error::Parse(ref ty, ref msg) => write!(f, "cannot parse {}: {}", ty, msg),
+            Error::Message(ref msg) => write!(f, "{}", msg.as_str()),
+        }
     }
 }

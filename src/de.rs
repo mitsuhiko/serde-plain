@@ -32,7 +32,7 @@ macro_rules! forward_to_deserialize_from_str {
             V: Visitor<'de>,
         {
             visitor.$visit_func(self.input.parse()
-                .map_err(|e| Error::Message(format!("cannot parse {}: {}", $tymsg, e)))?)
+                .map_err(|e| Error::Parse($tymsg, format!("{}", e)))?)
         }
     }
 }
@@ -44,7 +44,7 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("any"))
     }
 
     forward_to_deserialize_from_str!(deserialize_bool, visit_bool, "boolean");
@@ -78,14 +78,14 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("bytes"))
     }
 
     fn deserialize_byte_buf<V>(self, _visitor: V) -> Result<V::Value, Error>
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("bytes"))
     }
 
     fn deserialize_option<V>(self, visitor: V) -> Result<V::Value, Error>
@@ -132,14 +132,14 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("seq"))
     }
 
     fn deserialize_tuple<V>(self, _len: usize, _visitor: V) -> Result<V::Value, Error>
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("tuple"))
     }
 
     fn deserialize_tuple_struct<V>(
@@ -151,14 +151,14 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("tuple struct"))
     }
 
     fn deserialize_map<V>(self, _visitor: V) -> Result<V::Value, Error>
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("map"))
     }
 
     fn deserialize_struct<V>(
@@ -170,7 +170,7 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("struct"))
     }
 
     fn deserialize_enum<V>(
@@ -196,6 +196,6 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization)
+        Err(Error::ImpossibleDeserialization("any"))
     }
 }
