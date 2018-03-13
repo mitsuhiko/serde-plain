@@ -25,11 +25,23 @@ impl From<serde_plain::Error> for Test2Error {
     }
 }
 
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug)]
+pub enum Test3 {
+    FooBarBaz,
+    BlahBlah,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct Test3Error(String);
+
 forward_from_str_to_serde!(Test);
 forward_display_to_serde!(Test);
 
 forward_from_str_to_serde!(Test2, Test2Error);
 forward_display_to_serde!(Test2);
+
+forward_from_str_to_serde!(Test3, |err| -> Test3Error { Test3Error(err.to_string()) });
+forward_display_to_serde!(Test3);
 
 #[test]
 fn test_basics() {
@@ -40,4 +52,9 @@ fn test_basics() {
 #[test]
 fn test_custom_error() {
     assert_eq!("whatever".parse::<Test2>(), Err(Test2Error));
+}
+
+#[test]
+fn test_custom_error_conversion() {
+    assert_eq!("whatever".parse::<Test3>(), Err(Test3Error("unknown variant `whatever`, expected `FooBarBaz` or `BlahBlah`".to_string())));
 }

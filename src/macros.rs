@@ -22,12 +22,41 @@
 /// Additionally this macro supports a second argument which can be the
 /// error type to use.  In that case `From<serde_plain::Error>` needs
 /// to be implemented for that error.
+///
+/// A third form with a conversion function as second argument is supported.
+/// The closure needs to be in the form `|err| -> ErrType { ... }`:
+///
+/// ```rust
+/// #[macro_use] extern crate serde_derive;
+/// #[macro_use] extern crate serde_plain;
+/// # fn main() {
+///
+/// #[derive(Deserialize, Debug)]
+/// pub enum MyEnum {
+///     VariantA,
+///     VariantB,
+/// }
+/// 
+/// #[derive(Debug)]
+/// pub struct MyError(String);
+///
+/// forward_from_str_to_serde!(MyEnum, |err| -> MyError { MyError(err.to_string()) });
+/// # }
+/// ```
 macro_rules! forward_from_str_to_serde {
     ($type:ty) => {
         impl ::std::str::FromStr for $type {
             type Err = $crate::Error;
             fn from_str(s: &str) -> Result<$type, Self::Err> {
                 $crate::from_str(s)
+            }
+        }
+    };
+    ($type:ty, |$var:ident| -> $err_type:ty { $err_conv:expr }) => {
+        impl ::std::str::FromStr for $type {
+            type Err = $err_type;
+            fn from_str(s: &str) -> Result<$type, Self::Err> {
+                $crate::from_str(s).map_err(|$var| ($err_conv))
             }
         }
     };
