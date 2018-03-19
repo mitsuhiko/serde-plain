@@ -47,7 +47,7 @@ macro_rules! forward_from_str_to_serde {
     ($type:ty) => {
         impl ::std::str::FromStr for $type {
             type Err = $crate::Error;
-            fn from_str(s: &str) -> Result<$type, Self::Err> {
+            fn from_str(s: &str) -> ::std::result::Result<$type, Self::Err> {
                 $crate::from_str(s)
             }
         }
@@ -55,7 +55,7 @@ macro_rules! forward_from_str_to_serde {
     ($type:ty, |$var:ident| -> $err_type:ty { $err_conv:expr }) => {
         impl ::std::str::FromStr for $type {
             type Err = $err_type;
-            fn from_str(s: &str) -> Result<$type, Self::Err> {
+            fn from_str(s: &str) -> ::std::result::Result<$type, Self::Err> {
                 $crate::from_str(s).map_err(|$var| ($err_conv))
             }
         }
@@ -63,7 +63,7 @@ macro_rules! forward_from_str_to_serde {
     ($type:ty, $err_type:ty) => {
         impl ::std::str::FromStr for $type {
             type Err = $err_type;
-            fn from_str(s: &str) -> Result<$type, Self::Err> {
+            fn from_str(s: &str) -> ::std::result::Result<$type, Self::Err> {
                 $crate::from_str(s).map_err(|e| e.into())
             }
         }
@@ -131,7 +131,7 @@ macro_rules! forward_display_to_serde {
 macro_rules! derive_deserialize_from_str {
     ($type:ty, $expectation:expr) => {
         impl<'de> ::serde::de::Deserialize<'de> for $type {
-            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
             where
                 D: ::serde::de::Deserializer<'de>,
             {
@@ -144,7 +144,7 @@ macro_rules! derive_deserialize_from_str {
                         formatter.write_str($expectation)
                     }
 
-                    fn visit_str<E>(self, value: &str) -> Result<$type, E>
+                    fn visit_str<E>(self, value: &str) -> ::std::result::Result<$type, E>
                     where
                         E: ::serde::de::Error,
                     {
@@ -187,7 +187,7 @@ macro_rules! derive_deserialize_from_str {
 macro_rules! derive_serialize_from_display {
     ($type:ty) => {
         impl ::serde::ser::Serialize for $type {
-            fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+            fn serialize<S>(&self, serializer: S) -> ::std::result::Result<S::Ok, S::Error>
             where
                 S: ::serde::ser::Serializer,
             {
