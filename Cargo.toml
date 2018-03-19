@@ -1,6 +1,6 @@
 [package]
 name = "serde_plain"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Armin Ronacher <armin.ronacher@active-4.com>"]
 license = "MIT/Apache-2.0"
 description = "A restricted plain text serializer for serde"
