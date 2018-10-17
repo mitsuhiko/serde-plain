@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
 extern crate serde_plain;
 
 use std::str::FromStr;
@@ -10,6 +11,23 @@ pub enum Test {
     FooBarBaz,
     BlahBlah,
 }
+
+#[derive(Deserialize, PartialEq, Eq, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum FooType { FooA, FooB }
+#[derive(Deserialize, PartialEq, Eq, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum BarType { BarA, BarB }
+
+#[derive(Deserialize, PartialEq, Eq, Debug)]
+#[serde(untagged)]
+pub enum TestUntagged {
+    Foo(FooType),
+    Bar(BarType),
+    Other(String),
+}
+
+forward_from_str_to_serde!(TestUntagged);
 
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 pub struct NewInt(pub i32);
@@ -42,6 +60,21 @@ fn test_basics() {
         Test::BlahBlah
     );
     assert_eq!(serde_plain::from_str::<NewInt>("42").unwrap(), NewInt(42));
+}
+
+#[test]
+fn test_untagged_enum() {
+    let pairs = [
+        ("foo_a", TestUntagged::Foo(FooType::FooA)),
+        ("foo_b", TestUntagged::Foo(FooType::FooB)),
+        ("bar_a", TestUntagged::Bar(BarType::BarA)),
+        ("bar_b", TestUntagged::Bar(BarType::BarB)),
+        ("other", TestUntagged::Other("other".to_string())),
+    ];
+
+    for (string, expected) in pairs.iter() {
+        assert_eq!(string.parse::<TestUntagged>().unwrap(), *expected);
+    }
 }
 
 #[test]
