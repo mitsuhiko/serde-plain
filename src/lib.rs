@@ -38,8 +38,6 @@
 //! ```rust
 //! assert_eq!(serde_plain::to_string(&true).unwrap(), "true");
 //! ```
-extern crate serde;
-
 mod de;
 mod error;
 mod macros;

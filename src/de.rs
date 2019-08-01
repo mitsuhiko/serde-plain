@@ -8,8 +8,8 @@ pub struct Deserializer<'de> {
 }
 
 impl<'de> Deserializer<'de> {
-    pub fn from_str(input: &'de str) -> Self {
-        Deserializer { input: input }
+    pub fn new(input: &'de str) -> Self {
+        Deserializer { input }
     }
 }
 
@@ -22,7 +22,7 @@ pub fn from_str<'a, T>(s: &'a str) -> Result<T, Error>
 where
     T: Deserialize<'a>,
 {
-    T::deserialize(Deserializer::from_str(s))
+    T::deserialize(Deserializer::new(s))
 }
 
 macro_rules! forward_to_deserialize_from_str {

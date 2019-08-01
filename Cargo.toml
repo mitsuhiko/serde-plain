@@ -10,6 +10,7 @@ repository = "https://github.com/mitsuhiko/serde-plain"
 keywords = ["serde", "serialization", "from_str", "display"]
 categories = ["encoding"]
 readme = "README.md"
+edition = "2018"
 
 [dependencies]
 serde = "1.0.29"
