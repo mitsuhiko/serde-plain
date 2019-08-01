@@ -1,6 +1,6 @@
 use serde::ser;
 
-use error::Error;
+use crate::error::Error;
 
 /// A simple serializer that can dump out strings.
 pub struct Serializer;

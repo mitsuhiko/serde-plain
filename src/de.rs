@@ -1,6 +1,6 @@
 use serde::de::{self, Deserialize, IntoDeserializer, Visitor};
 
-use error::Error;
+use crate::error::Error;
 
 /// A simple deserializer that works with plain strings.
 pub struct Deserializer<'de> {

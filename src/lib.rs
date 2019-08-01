@@ -45,6 +45,6 @@ mod error;
 mod macros;
 mod ser;
 
-pub use de::*;
-pub use error::*;
-pub use ser::*;
+pub use crate::de::*;
+pub use crate::error::*;
+pub use crate::ser::*;
