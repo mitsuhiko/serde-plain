@@ -77,7 +77,12 @@ fn test_forward_custom_error() {
 
 #[test]
 fn test_forward_custom_error_conversion() {
-    assert_eq!("whatever".parse::<Test3>(), Err(Test3Error("unknown variant `whatever`, expected `FooBarBaz` or `BlahBlah`".to_string())));
+    assert_eq!(
+        "whatever".parse::<Test3>(),
+        Err(Test3Error(
+            "unknown variant `whatever`, expected `FooBarBaz` or `BlahBlah`".to_string()
+        ))
+    );
 }
 
 #[test]

@@ -14,10 +14,16 @@ pub enum Test {
 
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 #[serde(rename_all = "snake_case")]
-pub enum FooType { FooA, FooB }
+pub enum FooType {
+    FooA,
+    FooB,
+}
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 #[serde(rename_all = "snake_case")]
-pub enum BarType { BarA, BarB }
+pub enum BarType {
+    BarA,
+    BarB,
+}
 
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 #[serde(untagged)]

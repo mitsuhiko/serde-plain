@@ -40,11 +40,11 @@
 //! ```
 extern crate serde;
 
-mod macros;
-mod ser;
 mod de;
 mod error;
+mod macros;
+mod ser;
 
-pub use ser::*;
 pub use de::*;
 pub use error::*;
+pub use ser::*;

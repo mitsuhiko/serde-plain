@@ -22,7 +22,7 @@ impl ser::Serializer for Serializer {
     type SerializeStruct = ser::Impossible<String, Error>;
     type SerializeStructVariant = ser::Impossible<String, Error>;
 
-    serialize_as_string!{
+    serialize_as_string! {
         bool => serialize_bool,
         u8  => serialize_u8,
         u16 => serialize_u16,

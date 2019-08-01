@@ -98,7 +98,7 @@ macro_rules! forward_display_to_serde {
                 write!(f, "{}", $crate::to_string(self).unwrap())
             }
         }
-    }
+    };
 }
 
 /// Derives `serde::Deserialize` a type that implements `FromStr`.
@@ -140,7 +140,10 @@ macro_rules! derive_deserialize_from_str {
                 impl<'de> ::serde::de::Visitor<'de> for V {
                     type Value = $type;
 
-                    fn expecting(&self, formatter: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                    fn expecting(
+                        &self,
+                        formatter: &mut ::std::fmt::Formatter,
+                    ) -> ::std::fmt::Result {
                         formatter.write_str($expectation)
                     }
 
@@ -148,17 +151,19 @@ macro_rules! derive_deserialize_from_str {
                     where
                         E: ::serde::de::Error,
                     {
-                        value
-                            .parse()
-                            .map_err(|_| ::serde::de::Error::invalid_value(
-                                ::serde::de::Unexpected::Str(value), &self))
+                        value.parse().map_err(|_| {
+                            ::serde::de::Error::invalid_value(
+                                ::serde::de::Unexpected::Str(value),
+                                &self,
+                            )
+                        })
                     }
                 }
 
                 deserializer.deserialize_str(V)
             }
         }
-    }
+    };
 }
 
 /// Derives `serde::Serialize` a type that implements `fmt::Display`.
@@ -194,5 +199,5 @@ macro_rules! derive_serialize_from_display {
                 serializer.serialize_str(&self.to_string())
             }
         }
-    }
+    };
 }
