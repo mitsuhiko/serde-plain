@@ -31,10 +31,13 @@ macro_rules! forward_to_deserialize_from_str {
         where
             V: Visitor<'de>,
         {
-            visitor.$visit_func(self.input.parse()
-                .map_err(|e| Error::Parse($tymsg, format!("{}", e)))?)
+            visitor.$visit_func(
+                self.input
+                    .parse()
+                    .map_err(|e| Error::Parse($tymsg, format!("{}", e)))?,
+            )
         }
-    }
+    };
 }
 
 impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
@@ -92,7 +95,7 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        if self.input == "" {
+        if self.input.is_empty() {
             visitor.visit_none()
         } else {
             visitor.visit_some(self)
@@ -103,7 +106,7 @@ impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        if self.input == "" {
+        if self.input.is_empty() {
             visitor.visit_unit()
         } else {
             Err(Error::Message("expected empty string for unit".into()))
