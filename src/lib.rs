@@ -19,7 +19,8 @@
 //!
 //! ```rust
 //! # #[macro_use] extern crate serde_derive;
-//! # extern crate serde_plain;
+//! use serde::Deserialize;
+//!
 //! # fn main() {
 //! #[derive(Deserialize, Debug, PartialEq, Eq)]
 //! pub enum MyEnum {

@@ -2,8 +2,9 @@
 /// Implements `FromStr` for a type that forwards to serde.
 ///
 /// ```rust
-/// #[macro_use] extern crate serde_derive;
-/// #[macro_use] extern crate serde_plain;
+/// # #[macro_use] extern crate serde_derive;
+/// use serde::Deserialize;
+/// use serde_plain::forward_from_str_to_serde;
 /// # fn main() {
 ///
 /// #[derive(Deserialize, Debug)]
@@ -27,8 +28,9 @@
 /// The closure needs to be in the form `|err| -> ErrType { ... }`:
 ///
 /// ```rust
-/// #[macro_use] extern crate serde_derive;
-/// #[macro_use] extern crate serde_plain;
+/// # #[macro_use] extern crate serde_derive;
+/// use serde::Deserialize;
+/// use serde_plain::forward_from_str_to_serde;
 /// # fn main() {
 ///
 /// #[derive(Deserialize, Debug)]
@@ -74,8 +76,9 @@ macro_rules! forward_from_str_to_serde {
 /// Implements `fmt::Display` for a type that forwards to serde.
 ///
 /// ```rust
-/// #[macro_use] extern crate serde_derive;
-/// #[macro_use] extern crate serde_plain;
+/// # #[macro_use] extern crate serde_derive;
+/// use serde::Deserialize;
+/// use serde_plain::forward_display_to_serde;
 /// # fn main() {
 ///
 /// #[derive(Serialize, Debug)]
@@ -106,8 +109,7 @@ macro_rules! forward_display_to_serde {
 /// ```rust
 /// use std::str::FromStr;
 /// use std::num::ParseIntError;
-/// #[macro_use] extern crate serde;
-/// #[macro_use] extern crate serde_plain;
+/// use serde_plain::derive_deserialize_from_str;
 /// # fn main() {
 ///
 /// pub struct MyStruct(u32);
@@ -170,8 +172,7 @@ macro_rules! derive_deserialize_from_str {
 ///
 /// ```rust
 /// use std::fmt;
-/// #[macro_use] extern crate serde;
-/// #[macro_use] extern crate serde_plain;
+/// use serde_plain::derive_serialize_from_display;
 /// # fn main() {
 ///
 /// pub struct MyStruct(u32);
