@@ -95,6 +95,13 @@ macro_rules! forward_from_str_to_serde {
 /// `to_string` method from this crate.  In case that fails the method
 /// will panic.
 macro_rules! forward_display_to_serde {
+    ($type:ident $(:: $type_extra:ident)* < $($lt:lifetime),+ >) => {
+        impl<$($lt,)*> ::std::fmt::Display for $type$(:: $type_extra)*<$($lt,)*> {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                write!(f, "{}", $crate::to_string(self).unwrap())
+            }
+        }
+    };
     ($type:ty) => {
         impl ::std::fmt::Display for $type {
             fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
@@ -191,6 +198,16 @@ macro_rules! derive_deserialize_from_str {
 /// `to_string` method on the target.
 #[macro_export]
 macro_rules! derive_serialize_from_display {
+    ($type:ident $(:: $type_extra:ident)* < $($lt:lifetime),+ >) => {
+        impl<$($lt,)*> ::serde::ser::Serialize for $type$(:: $type_extra)*<$($lt,)*> {
+            fn serialize<S>(&self, serializer: S) -> ::std::result::Result<S::Ok, S::Error>
+            where
+                S: ::serde::ser::Serializer,
+            {
+                serializer.serialize_str(&self.to_string())
+            }
+        }
+    };
     ($type:ty) => {
         impl ::serde::ser::Serialize for $type {
             fn serialize<S>(&self, serializer: S) -> ::std::result::Result<S::Ok, S::Error>
@@ -201,4 +218,58 @@ macro_rules! derive_serialize_from_display {
             }
         }
     };
+}
+
+#[test]
+fn test_forward_display_to_serde_lifetimes() {
+    use serde_derive::Serialize;
+
+    #[derive(Serialize)]
+    struct MyType<'a>(&'a str);
+
+    mod inner {
+        use serde_derive::Serialize;
+
+        #[derive(Serialize)]
+        pub struct MyType<'a>(pub &'a str);
+    }
+
+    forward_display_to_serde!(MyType<'a>);
+    forward_display_to_serde!(inner::MyType<'a>);
+
+    assert_eq!(MyType("x").to_string(), "x");
+    assert_eq!(inner::MyType("x").to_string(), "x");
+}
+
+#[test]
+fn test_derive_serialize_from_display_lifetimes() {
+    use serde_derive::Deserialize;
+
+    #[derive(Deserialize)]
+    struct MyType<'a>(&'a str);
+
+    impl<'a> std::fmt::Display for MyType<'a> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.0)
+        }
+    }
+
+    mod inner {
+        use serde_derive::Deserialize;
+
+        #[derive(Deserialize)]
+        pub struct MyType<'a>(pub &'a str);
+
+        impl<'a> std::fmt::Display for MyType<'a> {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", self.0)
+            }
+        }
+    }
+
+    derive_serialize_from_display!(MyType<'a>);
+    derive_serialize_from_display!(inner::MyType<'a>);
+
+    assert_eq!(crate::to_string(&MyType("x")).unwrap(), "x");
+    assert_eq!(crate::to_string(&inner::MyType("x")).unwrap(), "x");
 }
