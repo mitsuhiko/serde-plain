@@ -1,10 +1,11 @@
+use serde_plain::{
+    derive_deserialize_from_str, derive_serialize_from_display, forward_display_to_serde,
+    forward_from_str_to_serde,
+};
 use std::{fmt, num, str};
 
-extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate serde_plain;
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug)]
 #[serde(rename_all = "snake_case")]

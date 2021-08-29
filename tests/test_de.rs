@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate serde_plain;
+
+use serde_plain::forward_from_str_to_serde;
 
 use std::str::FromStr;
 
