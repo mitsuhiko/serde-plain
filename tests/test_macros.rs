@@ -1,6 +1,6 @@
 use serde_plain::{
-    derive_deserialize_from_str, derive_serialize_from_display, forward_display_to_serde,
-    forward_from_str_to_serde,
+    derive_deserialize_from_fromstr, derive_display_from_serialize,
+    derive_fromstr_from_deserialize, derive_serialize_from_display,
 };
 use std::{fmt, num, str};
 
@@ -53,16 +53,16 @@ impl fmt::Display for TestStruct {
     }
 }
 
-forward_from_str_to_serde!(Test);
-forward_display_to_serde!(Test);
+derive_fromstr_from_deserialize!(Test);
+derive_display_from_serialize!(Test);
 
-forward_from_str_to_serde!(Test2, Test2Error);
-forward_display_to_serde!(Test2);
+derive_fromstr_from_deserialize!(Test2, Test2Error);
+derive_display_from_serialize!(Test2);
 
-forward_from_str_to_serde!(Test3, |err| -> Test3Error { Test3Error(err.to_string()) });
-forward_display_to_serde!(Test3);
+derive_fromstr_from_deserialize!(Test3, |err| -> Test3Error { Test3Error(err.to_string()) });
+derive_display_from_serialize!(Test3);
 
-derive_deserialize_from_str!(TestStruct, "valid positive number");
+derive_deserialize_from_fromstr!(TestStruct, "valid positive number");
 derive_serialize_from_display!(TestStruct);
 
 #[test]

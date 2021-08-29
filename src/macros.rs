@@ -1,10 +1,10 @@
 #[macro_export]
-/// Implements `FromStr` for a type that forwards to serde.
+/// Implements [`FromStr`](std::str::FromStr) for a type that forwards to [`Deserialize`](serde::Deserialize).
 ///
 /// ```rust
 /// # #[macro_use] extern crate serde_derive;
 /// use serde::Deserialize;
-/// use serde_plain::forward_from_str_to_serde;
+/// use serde_plain::derive_fromstr_from_deserialize;
 /// # fn main() {
 ///
 /// #[derive(Deserialize, Debug)]
@@ -13,12 +13,12 @@
 ///     VariantB,
 /// }
 ///
-/// forward_from_str_to_serde!(MyEnum);
+/// derive_fromstr_from_deserialize!(MyEnum);
 /// # }
 /// ```
 ///
-/// This automatically implements `FromStr` which will invoke the
-/// `from_str` method from this crate.
+/// This automatically implements [`FromStr`](std::str::FromStr) which will
+/// invoke the [`from_str`](crate::from_str) method from this crate.
 ///
 /// Additionally this macro supports a second argument which can be the
 /// error type to use.  In that case `From<serde_plain::Error>` needs
@@ -30,7 +30,7 @@
 /// ```rust
 /// # #[macro_use] extern crate serde_derive;
 /// use serde::Deserialize;
-/// use serde_plain::forward_from_str_to_serde;
+/// use serde_plain::derive_fromstr_from_deserialize;
 /// # fn main() {
 ///
 /// #[derive(Deserialize, Debug)]
@@ -42,10 +42,10 @@
 /// #[derive(Debug)]
 /// pub struct MyError(String);
 ///
-/// forward_from_str_to_serde!(MyEnum, |err| -> MyError { MyError(err.to_string()) });
+/// derive_fromstr_from_deserialize!(MyEnum, |err| -> MyError { MyError(err.to_string()) });
 /// # }
 /// ```
-macro_rules! forward_from_str_to_serde {
+macro_rules! derive_fromstr_from_deserialize {
     ($type:ty) => {
         impl ::std::str::FromStr for $type {
             type Err = $crate::Error;
@@ -72,13 +72,21 @@ macro_rules! forward_from_str_to_serde {
     };
 }
 
+/// Legacy alias for [`derive_fromstr_from_deserialize`].
+#[deprecated(note = "legacy alias for derive_fromstr_from_deserialize")]
+#[doc(hidden)]
 #[macro_export]
-/// Implements `fmt::Display` for a type that forwards to serde.
+macro_rules! forward_from_str_to_serde {
+    ($($tt:tt)*) => { $crate::derive_fromstr_from_deserialize!($($tt)*); }
+}
+
+#[macro_export]
+/// Implements [`Display`](std::fmt::Display) for a type that forwards to [`Serialize`](serde::Serialize).
 ///
 /// ```rust
 /// # #[macro_use] extern crate serde_derive;
 /// use serde::Deserialize;
-/// use serde_plain::forward_display_to_serde;
+/// use serde_plain::derive_display_from_serialize;
 /// # fn main() {
 ///
 /// #[derive(Serialize, Debug)]
@@ -87,14 +95,14 @@ macro_rules! forward_from_str_to_serde {
 ///     VariantB,
 /// }
 ///
-/// forward_display_to_serde!(MyEnum);
+/// derive_display_from_serialize!(MyEnum);
 /// # }
 /// ```
 ///
-/// This automatically implements `fmt::Display` which will invoke the
-/// `to_string` method from this crate.  In case that fails the method
-/// will panic.
-macro_rules! forward_display_to_serde {
+/// This automatically implements [`Display`](std::fmt::Display) which will
+/// invoke the [`to_string`](crate::to_string) method from this crate. In case
+/// that fails the method will panic.
+macro_rules! derive_display_from_serialize {
     ($type:ident $(:: $type_extra:ident)* < $($lt:lifetime),+ >) => {
         impl<$($lt,)*> ::std::fmt::Display for $type$(:: $type_extra)*<$($lt,)*> {
             fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
@@ -111,12 +119,20 @@ macro_rules! forward_display_to_serde {
     };
 }
 
-/// Derives `serde::Deserialize` a type that implements `FromStr`.
+/// Legacy alias for [`derive_fromstr_from_serialize`].
+#[deprecated(note = "legacy alias for derive_display_from_serialize")]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! forward_display_to_serde {
+    ($($tt:tt)*) => { $crate::derive_display_from_serialize!($($tt)*); }
+}
+
+/// Derives [`Deserialize`](serde::Serialize) for a type that implements [`FromStr`](std::str::FromStr).
 ///
 /// ```rust
 /// use std::str::FromStr;
 /// use std::num::ParseIntError;
-/// use serde_plain::derive_deserialize_from_str;
+/// use serde_plain::derive_deserialize_from_fromstr;
 /// # fn main() {
 ///
 /// pub struct MyStruct(u32);
@@ -128,16 +144,16 @@ macro_rules! forward_display_to_serde {
 ///     }
 /// }
 ///
-/// derive_deserialize_from_str!(MyStruct, "valid positive number");
+/// derive_deserialize_from_fromstr!(MyStruct, "valid positive number");
 /// # }
 /// ```
 ///
-/// This automatically implements `fmt::Serialize` which will invoke the
-/// `from_str` function on the target type internally. First argument is
-/// the name of the type, the second is a message for the expectation
-/// error (human readable type effectively).
+/// This automatically implements [`Serialize`](serde::Serialize) which will
+/// invoke the [`from_str`](crate::from_str) function on the target type
+/// internally. First argument is the name of the type, the second is a message
+/// for the expectation error (human readable type effectively).
 #[macro_export]
-macro_rules! derive_deserialize_from_str {
+macro_rules! derive_deserialize_from_fromstr {
     ($type:ty, $expectation:expr) => {
         impl<'de> ::serde::de::Deserialize<'de> for $type {
             fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
@@ -175,7 +191,15 @@ macro_rules! derive_deserialize_from_str {
     };
 }
 
-/// Derives `serde::Serialize` a type that implements `fmt::Display`.
+/// Legacy alias for [`derive_fromstr_from_deserialize`].
+#[deprecated(note = "legacy alias for derive_deserialize_from_fromstr")]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! derive_deserialize_from_str {
+    ($($tt:tt)*) => { $crate::derive_deserialize_from_fromstr!($($tt)*); }
+}
+
+/// Derives [`Serialize`](serde::Serialize) a type that implements [`Display`](std::fmt::Display).
 ///
 /// ```rust
 /// use std::fmt;
@@ -194,8 +218,8 @@ macro_rules! derive_deserialize_from_str {
 /// # }
 /// ```
 ///
-/// This automatically implements `fmt::Serialize` which will invoke the
-/// `to_string` method on the target.
+/// This automatically implements [`Serialize`](serde::Serialize) which will
+/// invoke the [`to_string`](crate::to_string) method on the target.
 #[macro_export]
 macro_rules! derive_serialize_from_display {
     ($type:ident $(:: $type_extra:ident)* < $($lt:lifetime),+ >) => {
@@ -221,7 +245,7 @@ macro_rules! derive_serialize_from_display {
 }
 
 #[test]
-fn test_forward_display_to_serde_lifetimes() {
+fn test_derive_display_from_serialize_lifetimes() {
     use serde_derive::Serialize;
 
     #[derive(Serialize)]
@@ -234,8 +258,8 @@ fn test_forward_display_to_serde_lifetimes() {
         pub struct MyType<'a>(pub &'a str);
     }
 
-    forward_display_to_serde!(MyType<'a>);
-    forward_display_to_serde!(inner::MyType<'a>);
+    derive_display_from_serialize!(MyType<'a>);
+    derive_display_from_serialize!(inner::MyType<'a>);
 
     assert_eq!(MyType("x").to_string(), "x");
     assert_eq!(inner::MyType("x").to_string(), "x");

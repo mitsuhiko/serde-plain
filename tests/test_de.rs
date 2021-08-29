@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate serde_derive;
 
-use serde_plain::forward_from_str_to_serde;
+use serde_plain::derive_fromstr_from_deserialize;
 
 use std::str::FromStr;
 
@@ -33,7 +33,7 @@ pub enum TestUntagged {
     Other(String),
 }
 
-forward_from_str_to_serde!(TestUntagged);
+derive_fromstr_from_deserialize!(TestUntagged);
 
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 pub struct NewInt(pub i32);
