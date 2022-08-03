@@ -40,7 +40,7 @@ macro_rules! forward_to_deserialize_from_str {
     };
 }
 
-impl<'de, 'a> de::Deserializer<'de> for Deserializer<'de> {
+impl<'de> de::Deserializer<'de> for Deserializer<'de> {
     type Error = Error;
 
     fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Error>
