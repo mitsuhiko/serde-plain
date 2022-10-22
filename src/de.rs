@@ -195,10 +195,10 @@ impl<'de> de::Deserializer<'de> for Deserializer<'de> {
         self.deserialize_str(visitor)
     }
 
-    fn deserialize_ignored_any<V>(self, _visitor: V) -> Result<V::Value, Error>
+    fn deserialize_ignored_any<V>(self, visitor: V) -> Result<V::Value, Error>
     where
         V: Visitor<'de>,
     {
-        Err(Error::ImpossibleDeserialization("any"))
+        self.deserialize_any(visitor)
     }
 }
