@@ -1,6 +1,10 @@
+# 1.0.2
+
+- Fix a bad documentation comment.  #7
+
 # 1.0.1
 
-- Fix a bad documentation comment.
+- Fix failure on ignored fields.  #5
 
 # 1.0.0
 
