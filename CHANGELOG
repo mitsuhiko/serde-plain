@@ -1,3 +1,7 @@
+# 1.0.1
+
+- Fix a bad documentation comment.
+
 # 1.0.0
 
 - added the ability to capture lifetimes.

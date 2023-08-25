@@ -66,7 +66,8 @@ fn test_basics() {
         Test::BlahBlah
     );
     assert_eq!(serde_plain::from_str::<NewInt>("42").unwrap(), NewInt(42));
-    serde_plain::from_str::<serde::de::IgnoredAny>("blah_blah").expect("doesn't fail on #[serde(skip)] fields");
+    serde_plain::from_str::<serde::de::IgnoredAny>("blah_blah")
+        .expect("doesn't fail on #[serde(skip)] fields");
 }
 
 #[test]
