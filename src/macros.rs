@@ -119,7 +119,7 @@ macro_rules! derive_display_from_serialize {
     };
 }
 
-/// Legacy alias for [`derive_fromstr_from_serialize`].
+/// Legacy alias for [`derive_display_from_serialize`].
 #[deprecated(note = "legacy alias for derive_display_from_serialize")]
 #[doc(hidden)]
 #[macro_export]
@@ -191,7 +191,7 @@ macro_rules! derive_deserialize_from_fromstr {
     };
 }
 
-/// Legacy alias for [`derive_fromstr_from_deserialize`].
+/// Legacy alias for [`derive_deserialize_from_fromstr`].
 #[deprecated(note = "legacy alias for derive_deserialize_from_fromstr")]
 #[doc(hidden)]
 #[macro_export]
