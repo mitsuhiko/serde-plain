@@ -85,7 +85,7 @@ macro_rules! forward_from_str_to_serde {
 ///
 /// ```rust
 /// # #[macro_use] extern crate serde_derive;
-/// use serde::Deserialize;
+/// use serde::Serialize;
 /// use serde_plain::derive_display_from_serialize;
 /// # fn main() {
 ///
