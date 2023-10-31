@@ -1,7 +1,7 @@
 use serde_derive::{Deserialize, Serialize};
-use serde_plain::{DeserializeString, SerializeDisplay};
+use serde_plain::{FromStrDeserialize, SerializeDisplay};
 
-#[derive(SerializeDisplay, DeserializeString, Serialize, Deserialize, Eq, PartialEq, Debug)]
+#[derive(SerializeDisplay, FromStrDeserialize, Serialize, Deserialize, Eq, PartialEq, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum Test {
     FooBarBaz,
