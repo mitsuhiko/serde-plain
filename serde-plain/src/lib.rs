@@ -48,3 +48,6 @@ mod ser;
 pub use crate::de::*;
 pub use crate::error::*;
 pub use crate::ser::*;
+
+#[cfg(feature = "derive")]
+pub use serde_plain_derive::*;

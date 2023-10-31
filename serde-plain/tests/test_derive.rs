@@ -1,5 +1,5 @@
 use serde_derive::{Deserialize, Serialize};
-use serde_plain_derive::{DeserializeString, SerializeDisplay};
+use serde_plain::{DeserializeString, SerializeDisplay};
 
 #[derive(SerializeDisplay, DeserializeString, Serialize, Deserialize, Eq, PartialEq, Debug)]
 #[serde(rename_all = "snake_case")]

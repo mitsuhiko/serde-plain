@@ -1,23 +1,5 @@
 use proc_macro::TokenStream;
-
-fn get_ident(input: TokenStream) -> String {
-    let input = input.to_string();
-    
-    let mut x = 9;
-    let mut start_i = input
-        .find(" pub enum");
-    if start_i.is_none() {
-        x = 5;
-        start_i = input.find(" enum")
-    }
-    let start_i = start_i.unwrap() + x;
-
-    let end_i = input[start_i..]
-        .find("{")
-        .unwrap();
-
-    input[start_i..start_i + end_i].trim().to_string()
-}
+use syn::parse_macro_input;
 
 /// Implements [`FromStr`](std::str::FromStr) for a type that forwards to [`Deserialize`](serde::Deserialize).
 ///
@@ -40,7 +22,7 @@ fn get_ident(input: TokenStream) -> String {
 /// Note: Custom error types are not supported. Use [`derive_display_from_serialize`](crate::derive_display_from_serialize) instead.
 #[proc_macro_derive(DeserializeString)]
 pub fn derive_deserialize_string(input: TokenStream) -> TokenStream {
-    let ident = get_ident(input);
+    let ident = parse_macro_input!(input as syn::DeriveInput).ident;
     format!(r#"
         impl ::std::str::FromStr for {0} {{
             type Err = ::serde_plain::Error;
@@ -72,7 +54,7 @@ pub fn derive_deserialize_string(input: TokenStream) -> TokenStream {
 /// that fails the method will panic.
 #[proc_macro_derive(SerializeDisplay)]
 pub fn derive_serialize_display(input: TokenStream) -> TokenStream {
-    let ident = get_ident(input);
+    let ident = parse_macro_input!(input as syn::DeriveInput).ident;
     format!(r#"
         impl ::std::fmt::Display for {0} {{
             fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {{
