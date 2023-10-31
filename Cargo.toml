@@ -3,3 +3,4 @@ members = [
     "serde-plain",
     "serde-plain-derive",
 ]
+resolver = "2"
